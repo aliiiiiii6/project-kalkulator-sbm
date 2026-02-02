@@ -3,7 +3,7 @@ import pandas as pd
 from google import genai # Library baru sesuai anjuran terminal lu
 
 # --- 1. SETUP CLIENT ---
-API_KEY = st.secrets["AIzaSyAwPBQgf-pg0H9fw0TDdnTuOLfhDVed4Bg"]
+API_KEY = st.secrets["GEMINI_API_KEY"]
 client = genai.Client(api_key=API_KEY)
 
 
