@@ -14,20 +14,34 @@ st.set_page_config(page_title="PUSBIN AI 2026", layout="wide")
 # 2. LOAD & FORMAT EXCEL CONTEXT
 # ==============================
 @st.cache_data
-def get_excel_context():
+def get_excel_context(query):
     file_path = "Database_Kantor.xlsx"
     summary = ""
 
     xl = pd.ExcelFile(file_path)
+    query = query.lower()
+
+    keywords = query.split()
 
     for sheet in xl.sheet_names:
         df = pd.read_excel(file_path, sheet_name=sheet)
         df = df.dropna(axis=1, how="all")
 
-        # ambil hanya 10 baris pertama biar ringan
-        sample = df.fillna("").to_dict(orient="records")
+        mask = df.astype(str).apply(
+            lambda row: any(
+                kw.lower() in " ".join(row.values.astype(str)).lower()
+                for kw in keywords
+            ),
+            axis=1,
+        )
 
-        summary += f"\n=== SHEET: {sheet} ===\n{sample}\n"
+        filtered = df[mask]
+
+        # fallback kalau kosong
+        if filtered.empty:
+            filtered = df.head(5)
+
+        summary += f"\n=== SHEET: {sheet} ===\n{filtered.to_csv(index=False)}\n"
 
     return summary
 
@@ -45,7 +59,7 @@ if user_input:
 
     with st.spinner("Arin sedang menganalisis..."):
 
-        context = get_excel_context()
+        context = get_excel_context(user_input)
 
         prompt = f"""
 Kamu adalah sistem analis anggaran instansi pemerintah.
@@ -57,7 +71,8 @@ Instruksi:
 - Identifikasi komponen biaya dari pertanyaan user
 - Cocokkan dengan data SBM pada Excel
 - Hitung sisa anggaran jika ada
-- Jika struktur tabel tidak rapi, lakukan interpretasi cerdas
+- Gunakan HANYA data numerik yang muncul dalam tabel context.
+Jangan membuat asumsi tarif jika data ada.
 - Fokus pada perhitungan, bukan jawaban umum
 
 Pertanyaan User:
