@@ -128,7 +128,7 @@ Pertanyaan User:
 """
 
         response = client.models.generate_content(
-            model="gemini-3.0-flash",
+            model="gemini-2.5-flash",
             contents=master_prompt
         )
 
