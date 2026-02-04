@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
-from google import genai
 import json
+from groq import Groq
 
 # ==============================
 # CLEAN NUMBER
@@ -19,8 +19,8 @@ def clean_number(val):
 # ==============================
 # 1. SETUP CLIENT GEMINI
 # ==============================
-API_KEY = st.secrets["GEMINI_API_KEY"]
-client = genai.Client(api_key=API_KEY)
+API_KEY = st.secrets["GROQ_API_KEY"]
+client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
 st.set_page_config(page_title="PUSBIN AI 2026", layout="wide")
 
@@ -134,10 +134,16 @@ Pertanyaan:
 {user_input}
 """
 
-        response = client.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=master_prompt
-        )
+ response = client.chat.completions.create(
+    model="llama-3.1-70b-versatile",
+    messages=[
+        {"role": "user", "content": master_prompt}
+    ],
+    temperature=0
+)
+
+    text = response.choices[0].message.content
+
 
         # ======================
         # SAFE JSON PARSE
