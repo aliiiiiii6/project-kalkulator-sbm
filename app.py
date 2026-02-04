@@ -77,15 +77,27 @@ def get_excel_context(query):
 # ==============================
 # EXECUTE CALCULATION (PANDAS)
 # ==============================
-def execute_calculation(kolom_list):
+def execute_calculation(kolom_list, query):
     file_path = "Database_Kantor.xlsx"
     xl = pd.ExcelFile(file_path)
 
+    keywords = query.lower().split()
     total = 0
 
     for sheet in xl.sheet_names:
         df = pd.read_excel(file_path, sheet_name=sheet)
         df = df.dropna(axis=1, how="all")
+
+        # FILTER BARIS SESUAI QUERY
+        mask = df.astype(str).apply(
+            lambda row: any(
+                kw in " ".join(row.values.astype(str)).lower()
+                for kw in keywords
+            ),
+            axis=1,
+        )
+
+        df = df[mask]
 
         for kol in kolom_list:
             if kol in df.columns:
@@ -163,7 +175,7 @@ Pertanyaan:
         # ======================
         # HITUNG VIA PANDAS
         # ======================
-        hasil_hitung = execute_calculation(kolom_dipilih)
+        hasil_hitung = execute_calculation(kolom_dipilih, user_input)
 
         final_text = f"""
 ### 1. Analisis
