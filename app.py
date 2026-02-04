@@ -142,15 +142,14 @@ Pertanyaan:
             temperature=0
         )
 
-        text = response.choices[0].message.content
-
+        content = response.choices[0].message.content
 
         # ======================
         # SAFE JSON PARSE
         # ======================
-      try:
-            raw = text.strip()
-            raw = raw.replace("```json","").replace("```","")
+        try:
+            raw = content.strip()
+            raw = raw.replace("```json", "").replace("```", "")
             hasil_json = json.loads(raw)
 
             kolom_dipilih = hasil_json.get("kolom", [])
@@ -158,7 +157,7 @@ Pertanyaan:
 
         except Exception as e:
             kolom_dipilih = []
-            analisis_awal = f"Model gagal parse JSON: {e}"
+            analisis_awal = f"Model gagal menentukan kolom. ({e})"
 
 
         # ======================
