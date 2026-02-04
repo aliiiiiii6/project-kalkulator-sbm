@@ -25,7 +25,7 @@ def get_excel_context():
         df = df.dropna(axis=1, how="all")
 
         # ambil hanya 10 baris pertama biar ringan
-        sample = df.head(10).fillna("").to_dict(orient="records")
+        sample = df.fillna("").to_dict(orient="records")
 
         summary += f"\n=== SHEET: {sheet} ===\n{sample}\n"
 
