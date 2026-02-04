@@ -133,7 +133,7 @@ Balas JSON SAJA:
 Pertanyaan:
 {user_input}
 """
-         response = client.chat.completions.create(
+       response = client.chat.completions.create(
             model="llama-3.1-70b-versatile",
             messages=[
                 {"role": "user", "content": master_prompt}
@@ -148,17 +148,18 @@ Pertanyaan:
         # ======================
         # SAFE JSON PARSE
         # ======================
-        try:
-            raw = response.text.strip()
+      try:
+            raw = text.strip()
             raw = raw.replace("```json","").replace("```","")
             hasil_json = json.loads(raw)
 
             kolom_dipilih = hasil_json.get("kolom", [])
             analisis_awal = hasil_json.get("analisis_awal", "")
 
-        except:
+        except Exception as e:
             kolom_dipilih = []
-            analisis_awal = "Model gagal menentukan kolom."
+            analisis_awal = f"Model gagal parse JSON: {e}"
+
 
         # ======================
         # HITUNG VIA PANDAS
