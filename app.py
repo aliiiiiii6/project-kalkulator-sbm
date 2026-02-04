@@ -110,7 +110,7 @@ if user_input:
         context = get_excel_context(user_input)
         struktur_kolom = get_column_structure()
 
-          master_prompt = f"""
+        master_prompt = f"""
 Kamu adalah sistem analis anggaran instansi pemerintah.
 
 STRUKTUR KOLOM:
