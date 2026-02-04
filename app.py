@@ -133,16 +133,16 @@ Balas JSON SAJA:
 Pertanyaan:
 {user_input}
 """
+         response = client.chat.completions.create(
+            model="llama-3.1-70b-versatile",
+            messages=[
+                {"role": "user", "content": master_prompt}
+            ],
+            temperature=0
+        )
 
- response = client.chat.completions.create(
-    model="llama-3.1-70b-versatile",
-    messages=[
-        {"role": "user", "content": master_prompt}
-    ],
-    temperature=0
-)
+        text = response.choices[0].message.content
 
-    text = response.choices[0].message.content
 
 
         # ======================
