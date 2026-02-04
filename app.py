@@ -1,11 +1,8 @@
-import streamlit as st
+pasti ada lagi : import streamlit as st
 import pandas as pd
+from google import genai
+import re
 import json
-from groq import Groq
-
-# ==============================
-# CLEAN NUMBER
-# ==============================
 def clean_number(val):
     if pd.isna(val):
         return 0
@@ -19,13 +16,13 @@ def clean_number(val):
 # ==============================
 # 1. SETUP CLIENT GEMINI
 # ==============================
-API_KEY = st.secrets["GROQ_API_KEY"]
-client = Groq(api_key=st.secrets["GROQ_API_KEY"])
+API_KEY = st.secrets["GEMINI_API_KEY"]
+client = genai.Client(api_key=API_KEY)
 
 st.set_page_config(page_title="PUSBIN AI 2026", layout="wide")
 
 # ==============================
-# 2. LOAD STRUCTURE EXCEL
+# 2. LOAD & FORMAT EXCEL CONTEXT
 # ==============================
 @st.cache_data
 def get_column_structure():
@@ -40,14 +37,10 @@ def get_column_structure():
 
     return struktur
 
-# ==============================
-# LOAD CONTEXT EXCEL
-# ==============================
-@st.cache_data
+      @st.cache_data
 def get_excel_context(query):
     file_path = "Database_Kantor.xlsx"
     xl = pd.ExcelFile(file_path)
-
     query = query.lower()
     keywords = query.split()
 
@@ -74,30 +67,15 @@ def get_excel_context(query):
 
     return summary
 
-# ==============================
-# EXECUTE CALCULATION (PANDAS)
-# ==============================
-def execute_calculation(kolom_list, query):
+def execute_calculation(kolom_list):
     file_path = "Database_Kantor.xlsx"
     xl = pd.ExcelFile(file_path)
 
-    keywords = query.lower().split()
     total = 0
 
     for sheet in xl.sheet_names:
         df = pd.read_excel(file_path, sheet_name=sheet)
         df = df.dropna(axis=1, how="all")
-
-        # FILTER BARIS SESUAI QUERY
-        mask = df.astype(str).apply(
-            lambda row: any(
-                kw in " ".join(row.values.astype(str)).lower()
-                for kw in keywords
-            ),
-            axis=1,
-        )
-
-        df = df[mask]
 
         for kol in kolom_list:
             if kol in df.columns:
@@ -110,10 +88,14 @@ def execute_calculation(kolom_list, query):
 # 3. UI
 # ==============================
 st.title("🤖 PUSBIN Smart Assistant (Arin)")
+
 user_input = st.text_input("Ketik rencana kegiatan atau cek anggaran:")
 
 # ==============================
 # 4. LOGIC AI
+# ==============================
+# ==============================
+# 4. LOGIC AI (1 CALL VERSION)
 # ==============================
 if user_input:
 
@@ -125,58 +107,48 @@ if user_input:
         master_prompt = f"""
 Kamu adalah sistem analis anggaran instansi pemerintah.
 
-STRUKTUR KOLOM:
+STRUKTUR KOLOM EXCEL:
 {struktur_kolom}
 
 CONTEXT DATA:
 {context}
 
 Tugas:
-1. Pilih kolom numerik yang harus dihitung
-2. Jelaskan analisis singkat
+1. Tentukan kolom mana yang perlu dihitung
+2. Jelaskan analisis secara singkat
 
-Balas JSON SAJA:
+Balas dalam JSON SAJA:
 
 {{
-"kolom": ["nama_kolom"],
-"analisis_awal": "penjelasan"
+  "kolom": ["nama_kolom"],
+  "analisis_awal": "penjelasan singkat"
 }}
 
-Pertanyaan:
+Pertanyaan User:
 {user_input}
 """
 
-        response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            messages=[
-                {"role": "user", "content": master_prompt}
-            ],
-            temperature=0
+        response = client.models.generate_content(
+            model="gemini-3.0-flash",
+            contents=master_prompt
         )
 
-        content = response.choices[0].message.content
-
-        # ======================
-        # SAFE JSON PARSE
-        # ======================
         try:
-            raw = content.strip()
-            raw = raw.replace("```json", "").replace("```", "")
-            hasil_json = json.loads(raw)
-
+            hasil_json = json.loads(response.text)
             kolom_dipilih = hasil_json.get("kolom", [])
             analisis_awal = hasil_json.get("analisis_awal", "")
-
-        except Exception as e:
+        except:
             kolom_dipilih = []
-            analisis_awal = f"Model gagal menentukan kolom. ({e})"
-
+            analisis_awal = "Model gagal menentukan kolom."
 
         # ======================
-        # HITUNG VIA PANDAS
+        # PANDAS HITUNG
         # ======================
-        hasil_hitung = execute_calculation(kolom_dipilih, user_input)
+        hasil_hitung = execute_calculation(kolom_dipilih)
 
+        # ======================
+        # OUTPUT FINAL (NO SECOND CALL)
+        # ======================
         final_text = f"""
 ### 1. Analisis
 {analisis_awal}
@@ -185,7 +157,7 @@ Pertanyaan:
 Total hasil perhitungan sistem: **Rp {hasil_hitung:,.0f}**
 
 ### 3. Kesimpulan
-Perhitungan menggunakan data numerik langsung dari Excel.
+Perhitungan dilakukan menggunakan data numerik dari Excel secara langsung.
 """
 
         st.markdown(final_text)
