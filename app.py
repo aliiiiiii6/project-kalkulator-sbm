@@ -35,9 +35,8 @@ def get_column_structure():
         df = pd.read_excel(file_path, sheet_name=sheet, nrows=1)
         struktur += f"\nSheet {sheet}: {list(df.columns)}"
 
-    return struktur
-
-      @st.cache_data
+    return struktur 
+@st.cache_data
 def get_excel_context(query):
     file_path = "Database_Kantor.xlsx"
     xl = pd.ExcelFile(file_path)
