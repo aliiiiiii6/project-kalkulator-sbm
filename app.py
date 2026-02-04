@@ -1,4 +1,4 @@
-pasti ada lagi : import streamlit as st
+import streamlit as st
 import pandas as pd
 from google import genai
 import re
