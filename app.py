@@ -1,17 +1,6 @@
 import streamlit as st
 import pandas as pd
 from google import genai
-import re
-import json
-def clean_number(val):
-    if pd.isna(val):
-        return 0
-    val = str(val)
-    val = val.replace(".", "").replace(",", ".")
-    try:
-        return float(val)
-    except:
-        return 0
 
 # ==============================
 # 1. SETUP CLIENT GEMINI
@@ -25,25 +14,14 @@ st.set_page_config(page_title="PUSBIN AI 2026", layout="wide")
 # 2. LOAD & FORMAT EXCEL CONTEXT
 # ==============================
 @st.cache_data
-def get_column_structure():
-    file_path = "Database_Kantor.xlsx"
-    xl = pd.ExcelFile(file_path)
-
-    struktur = ""
-
-    for sheet in xl.sheet_names:
-        df = pd.read_excel(file_path, sheet_name=sheet, nrows=1)
-        struktur += f"\nSheet {sheet}: {list(df.columns)}"
-
-    return struktur 
-@st.cache_data
 def get_excel_context(query):
     file_path = "Database_Kantor.xlsx"
+    summary = ""
+
     xl = pd.ExcelFile(file_path)
     query = query.lower()
-    keywords = query.split()
 
-    summary = ""
+    keywords = query.split()
 
     for sheet in xl.sheet_names:
         df = pd.read_excel(file_path, sheet_name=sheet)
@@ -51,7 +29,7 @@ def get_excel_context(query):
 
         mask = df.astype(str).apply(
             lambda row: any(
-                kw in " ".join(row.values.astype(str)).lower()
+                kw.lower() in " ".join(row.values.astype(str)).lower()
                 for kw in keywords
             ),
             axis=1,
@@ -59,29 +37,13 @@ def get_excel_context(query):
 
         filtered = df[mask]
 
+        # fallback kalau kosong
         if filtered.empty:
-            filtered = df.head(3)
+            filtered = df.head(5)
 
         summary += f"\n=== SHEET: {sheet} ===\n{filtered.to_csv(index=False)}\n"
 
     return summary
-
-def execute_calculation(kolom_list):
-    file_path = "Database_Kantor.xlsx"
-    xl = pd.ExcelFile(file_path)
-
-    total = 0
-
-    for sheet in xl.sheet_names:
-        df = pd.read_excel(file_path, sheet_name=sheet)
-        df = df.dropna(axis=1, how="all")
-
-        for kol in kolom_list:
-            if kol in df.columns:
-                df[kol] = df[kol].apply(clean_number)
-                total += df[kol].sum()
-
-    return total
 
 # ==============================
 # 3. UI
@@ -93,70 +55,40 @@ user_input = st.text_input("Ketik rencana kegiatan atau cek anggaran:")
 # ==============================
 # 4. LOGIC AI
 # ==============================
-# ==============================
-# 4. LOGIC AI (1 CALL VERSION)
-# ==============================
 if user_input:
 
     with st.spinner("Arin sedang menganalisis..."):
 
         context = get_excel_context(user_input)
-        struktur_kolom = get_column_structure()
 
-        master_prompt = f"""
+        prompt = f"""
 Kamu adalah sistem analis anggaran instansi pemerintah.
 
-STRUKTUR KOLOM EXCEL:
-{struktur_kolom}
-
-CONTEXT DATA:
+Gunakan data berikut sebagai database:
 {context}
 
-Tugas:
-1. Tentukan kolom mana yang perlu dihitung
-2. Jelaskan analisis secara singkat
-
-Balas dalam JSON SAJA:
-
-{{
-  "kolom": ["nama_kolom"],
-  "analisis_awal": "penjelasan singkat"
-}}
+Instruksi:
+- Identifikasi komponen biaya dari pertanyaan user
+- Cocokkan dengan data SBM pada Excel
+- Hitung sisa anggaran jika ada
+- Gunakan HANYA data numerik yang muncul dalam tabel context.
+Jangan membuat asumsi tarif jika data ada.
+- Fokus pada perhitungan, bukan jawaban umum
 
 Pertanyaan User:
 {user_input}
+
+Jawab dalam format:
+
+1. Analisis
+2. Perhitungan
+3. Kesimpulan
 """
 
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=master_prompt
-        )
+    model="gemini-2.5-flash",
+    contents=prompt
+)
 
-        try:
-            hasil_json = json.loads(response.text)
-            kolom_dipilih = hasil_json.get("kolom", [])
-            analisis_awal = hasil_json.get("analisis_awal", "")
-        except:
-            kolom_dipilih = []
-            analisis_awal = "Model gagal menentukan kolom."
 
-        # ======================
-        # PANDAS HITUNG
-        # ======================
-        hasil_hitung = execute_calculation(kolom_dipilih)
-
-        # ======================
-        # OUTPUT FINAL (NO SECOND CALL)
-        # ======================
-        final_text = f"""
-### 1. Analisis
-{analisis_awal}
-
-### 2. Perhitungan
-Total hasil perhitungan sistem: **Rp {hasil_hitung:,.0f}**
-
-### 3. Kesimpulan
-Perhitungan dilakukan menggunakan data numerik dari Excel secara langsung.
-"""
-
-        st.markdown(final_text)
+        st.markdown(response.text)
