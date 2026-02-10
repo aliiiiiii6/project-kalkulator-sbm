@@ -95,7 +95,6 @@ Tuliskan singkat saja.
 
 Pertanyaan User:
 {user_input}
-"""
 
 Jawab dalam format:
 
