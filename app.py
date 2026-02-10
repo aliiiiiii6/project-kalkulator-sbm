@@ -51,7 +51,7 @@ def get_excel_context(query):
 # ==============================
 st.title("🤖 PUSBIN Smart Assistant (Arin)")
 
-user_input = st.text_input("Ketik rencana kegiatan atau cek anggaran:")
+user_input = st.text_input("Masukan Segala Informasi Yang Kamu Butuhkan")
 
 # ==============================
 # 4. LOGIC AI
@@ -75,9 +75,27 @@ Instruksi:
 - Gunakan HANYA data numerik yang muncul dalam tabel context.
 Jangan membuat asumsi tarif jika data ada.
 - Fokus pada perhitungan, bukan jawaban umum
+- Output WAJIB menggunakan tabel markdown
+
+Format output:
+
+### Tabel Perhitungan
+| Komponen | Tarif | Volume | Total |
+|----------|-------|--------|-------|
+| ... | ... | ... | ... |
+
+### Ringkasan Anggaran
+| Item | Nilai |
+|------|------|
+| Total Biaya | ... |
+| Sisa Anggaran | ... |
+
+### Kesimpulan
+Tuliskan singkat saja.
 
 Pertanyaan User:
 {user_input}
+"""
 
 Jawab dalam format:
 
