@@ -57,7 +57,7 @@ user_input = st.text_input("Ketik rencana kegiatan atau cek anggaran:")
 # ==============================
 if user_input:
 
-    with st.spinner("Arin sedang menganalisis..."):
+    with st.spinner("sebentar yaaa, Arin lagi ngetik nih..."):
 
         context = get_excel_context(user_input)
 
