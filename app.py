@@ -40,8 +40,9 @@ def get_excel_context(query):
         # fallback kalau kosong
         if filtered.empty:
             filtered = df.head(5)
-
-        summary += f"\n=== SHEET: {sheet} ===\n{filtered.to_csv(index=False)}\n"
+            
+        filtered = filtered.drop(columns=["No"], errors="ignore")
+        summary += f"\n[DATA]\n{filtered.to_csv(index=False)}\n"
 
     return summary
 
