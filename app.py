@@ -90,6 +90,20 @@ section.main > div {
     text-align:center;
     margin-bottom:25px;
 }
+/* ===== CHAT WIDTH FIX ===== */
+[data-testid="stChatMessage"] {
+    max-width: 70%;
+}
+
+/* assistant kiri */
+[data-testid="stChatMessage"]:has([data-testid="stMarkdownContainer"]) {
+    margin-right: auto;
+}
+
+/* user kanan */
+[data-testid="stChatMessage"]:has(.stChatMessageAvatarUser) {
+    margin-left: auto;
+}
 
 </style>
 """, unsafe_allow_html=True)
