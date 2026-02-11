@@ -95,12 +95,14 @@ section.main > div {
     max-width: 100%;
 }
 
-/* assistant kiri */
-[data-testid="stChatMessage"]:has([data-testid="stMarkdownContainer"]) 
+/* assistant */
+[data-testid="stChatMessageContent"]{
+    max-width:70%;
+}
 
-/* user kanan */
-[data-testid="stChatMessage"]:has(.stChatMessageAvatarUser) {
-    margin-left: 100px;
+/* geser kanan bubble user */
+[data-testid="stChatMessage"]:nth-child(even){
+    margin-left:auto;
 }
 
 </style>
