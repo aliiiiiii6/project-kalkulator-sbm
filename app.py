@@ -113,6 +113,11 @@ section.main > div {
     justify-content:flex-end;
 }
 
+[data-testid="stChatMessageContent"]{
+    padding:14px 18px;
+    border-radius:18px;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
