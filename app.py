@@ -92,17 +92,17 @@ section.main > div {
 }
 /* ===== CHAT WIDTH FIX ===== */
 [data-testid="stChatMessage"] {
-    max-width: 70%;
+    max-width: 50%;
 }
 
 /* assistant kiri */
 [data-testid="stChatMessage"]:has([data-testid="stMarkdownContainer"]) {
-    margin-right: auto;
+    margin-left: auto;
 }
 
 /* user kanan */
 [data-testid="stChatMessage"]:has(.stChatMessageAvatarUser) {
-    margin-left: auto;
+    margin-right: auto;
 }
 
 </style>
