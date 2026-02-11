@@ -55,18 +55,22 @@ def get_excel_context(query):
 st.markdown("""
 <style>
 
-/* Background soft gradient */
-[data-testid="stAppViewContainer"]{
-    background: radial-gradient(circle at top,#eef2ff 0%,#f8fafc 40%,#ffffff 70%);
+/* ===== FIX BACKGROUND STREAMLIT LAYER ===== */
+html, body, [data-testid="stAppViewContainer"]{
+    background: radial-gradient(circle at 50% -20%, #e0e7ff 0%, #f8fafc 45%, #ffffff 80%);
 }
 
-/* Center layout feel */
+.main {
+    background: transparent !important;
+}
+
 .block-container{
     max-width: 900px;
     padding-top: 2rem;
+    background: transparent !important;
 }
 
-/* Hero container */
+/* ===== HERO STYLE (punya kamu) ===== */
 .gpt-hero{
     background: rgba(255,255,255,0.7);
     backdrop-filter: blur(12px);
@@ -77,21 +81,18 @@ st.markdown("""
     margin-bottom:25px;
 }
 
-/* Title style */
 .gpt-title{
     font-size:36px;
     font-weight:700;
     letter-spacing:-0.5px;
 }
 
-/* Subtitle */
 .gpt-sub{
     color:#6b7280;
     margin-top:8px;
     font-size:15px;
 }
 
-/* Feature mini badge */
 .badge-wrap{
     margin-top:18px;
 }
