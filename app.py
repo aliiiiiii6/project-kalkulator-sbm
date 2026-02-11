@@ -54,32 +54,28 @@ def get_excel_context(query):
 # ==============================
 st.markdown("""
 <style>
-section.main {
+
+/* ===== ROOT APP ===== */
+html, body, .stApp {
+    background: radial-gradient(circle at 50% -10%, #dfe6ff 0%, #f5f7ff 35%, #ffffff 75%) !important;
+}
+
+/* ===== STREAMLIT WHITE LAYERS (INI BIANGNYA) ===== */
+[data-testid="stAppViewContainer"],
+[data-testid="stAppViewContainer"] > .main,
+section.main,
+section.main > div {
     background: transparent !important;
 }
 
-/* Background utama */
-html, body, [data-testid="stAppViewContainer"] {
-    background: radial-gradient(circle at 50% -10%, #dfe6ff 0%, #f5f7ff 35%, #ffffff 75%);
-}
-
-/* Layer putih streamlit */
-[data-testid="stAppViewContainer"] > .main {
-    background: transparent !important;
-}
-
-.main {
-    background: transparent !important;
-}
-
+/* container tengah */
 .block-container{
     max-width: 900px;
     padding-top: 2rem;
     background: transparent !important;
 }
 
-
-/* ===== HERO STYLE (punya kamu) ===== */
+/* HERO */
 .gpt-hero{
     background: rgba(255,255,255,0.7);
     backdrop-filter: blur(12px);
@@ -88,31 +84,6 @@ html, body, [data-testid="stAppViewContainer"] {
     box-shadow:0 10px 30px rgba(0,0,0,0.06);
     text-align:center;
     margin-bottom:25px;
-}
-
-.gpt-title{
-    font-size:36px;
-    font-weight:700;
-    letter-spacing:-0.5px;
-}
-
-.gpt-sub{
-    color:#6b7280;
-    margin-top:8px;
-    font-size:15px;
-}
-
-.badge-wrap{
-    margin-top:18px;
-}
-
-.badge{
-    display:inline-block;
-    padding:6px 12px;
-    margin:4px;
-    border-radius:999px;
-    background:#f1f5f9;
-    font-size:13px;
 }
 
 </style>
