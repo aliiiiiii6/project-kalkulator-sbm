@@ -54,10 +54,18 @@ def get_excel_context(query):
 # ==============================
 st.markdown("""
 <style>
+section.main {
+    background: transparent !important;
+}
 
-/* ===== FIX BACKGROUND STREAMLIT LAYER ===== */
-html, body, [data-testid="stAppViewContainer"]{
-    background: radial-gradient(circle at 50% -20%, #e0e7ff 0%, #f8fafc 45%, #ffffff 80%);
+/* Background utama */
+html, body, [data-testid="stAppViewContainer"] {
+    background: radial-gradient(circle at 50% -10%, #dfe6ff 0%, #f5f7ff 35%, #ffffff 75%);
+}
+
+/* Layer putih streamlit */
+[data-testid="stAppViewContainer"] > .main {
+    background: transparent !important;
 }
 
 .main {
@@ -69,6 +77,7 @@ html, body, [data-testid="stAppViewContainer"]{
     padding-top: 2rem;
     background: transparent !important;
 }
+
 
 /* ===== HERO STYLE (punya kamu) ===== */
 .gpt-hero{
