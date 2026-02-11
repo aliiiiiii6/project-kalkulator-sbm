@@ -45,6 +45,11 @@ def get_excel_context(query):
         summary += f"\n[DATA]\n{filtered.to_csv(index=False)}\n"
 
     return summary
+# ==============================
+# INIT SESSION CHAT HISTORY
+# ==============================
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
 # ==============================
 # 3. UI
@@ -119,20 +124,44 @@ menghitung otomatis, dan menyusun tabel perhitungan dengan cepat.
 """, unsafe_allow_html=True)
 
 st.caption("💡 Coba tanya: Hitung biaya perjalanan dinas luar kota 3 orang")
+# TAMPILKAN CHAT HISTORY
+for msg in st.session_state.messages:
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
 
-user_input = st.text_input("Masukan Segala Informasi Yang Kamu Butuhkan")
+user_input = st.chat_input("Masukan Segala Informasi Yang Kamu Butuhkan")
 
+# ==============================
+# 4. LOGIC AI
+# ==============================
 # ==============================
 # 4. LOGIC AI
 # ==============================
 if user_input:
 
+    # simpan pesan user
+    st.session_state.messages.append({
+        "role": "user",
+        "content": user_input
+    })
+
+    # tampilkan bubble user
+    with st.chat_message("user"):
+        st.markdown(user_input)
+
     with st.spinner("sebentar yaaa, Arin lagi ngetik nih..."):
 
         context = get_excel_context(user_input)
 
+        history_text = ""
+        for m in st.session_state.messages:
+            history_text += f"{m['role'].upper()} : {m['content']}\n"
+
         prompt = f"""
 Kamu adalah sistem analis anggaran instansi pemerintah.
+
+Riwayat Percakapan:
+{history_text}
 
 Gunakan data berikut sebagai database:
 {context}
@@ -151,31 +180,31 @@ Format output:
 ### Tabel Perhitungan
 | Komponen | Tarif | Volume | Total |
 |----------|-------|--------|-------|
-| ... | ... | ... | ... |
 
 ### Ringkasan Anggaran
 | Item | Nilai |
 |------|------|
-| Total Biaya | ... |
-| Sisa Anggaran | ... |
 
 ### Kesimpulan
-Tuliskan singkat saja.
 
 Pertanyaan User:
 {user_input}
-
-Jawab dalam format:
-
-1. Analisis
-2. Perhitungan
-3. Kesimpulan
 """
 
         response = client.models.generate_content(
-    model="gemini-2.5-flash",
-    contents=prompt
-)
+            model="gemini-2.5-flash",
+            contents=prompt
+        )
 
+        ai_reply = response.text
 
-        st.markdown(response.text)
+    # tampilkan bubble assistant
+    with st.chat_message("assistant"):
+        st.markdown(ai_reply)
+
+    # simpan history assistant
+    st.session_state.messages.append({
+        "role": "assistant",
+        "content": ai_reply
+    })
+
