@@ -112,18 +112,28 @@ st.markdown("""
 # HERO SECTION (GPT STYLE)
 # ==============================
 st.markdown("""
-<div class="gpt-hero">
-    <div class="gpt-title">🤖 PUSBIN Smart Assistant (Arin)</div>
-    <div class="gpt-sub">
-        Asisten analisis anggaran berbasis AI yang membantu membaca data,
-        menghitung otomatis, dan menyusun tabel perhitungan dengan cepat.
-    </div>
+<div style="
+background:rgba(255,255,255,0.75);
+backdrop-filter:blur(10px);
+padding:30px;
+border-radius:18px;
+box-shadow:0 10px 25px rgba(0,0,0,0.05);
+text-align:center;
+">
 
-    <div class="badge-wrap">
-        <span class="badge">📊 Analisis Anggaran</span>
-        <span class="badge">🧮 Perhitungan Otomatis</span>
-        <span class="badge">⚡ AI Assistant</span>
-    </div>
+<h1 style="margin-bottom:5px;">🤖 PUSBIN Smart Assistant (Arin)</h1>
+
+<p style="color:#6b7280;font-size:15px;">
+Asisten analisis anggaran berbasis AI yang membantu membaca data,
+menghitung otomatis, dan menyusun tabel perhitungan dengan cepat.
+</p>
+
+<p>
+<span style="background:#f1f5f9;padding:6px 12px;border-radius:999px;margin:4px;">📊 Analisis Anggaran</span>
+<span style="background:#f1f5f9;padding:6px 12px;border-radius:999px;margin:4px;">🧮 Perhitungan Otomatis</span>
+<span style="background:#f1f5f9;padding:6px 12px;border-radius:999px;margin:4px;">⚡ AI Assistant</span>
+</p>
+
 </div>
 """, unsafe_allow_html=True)
 
