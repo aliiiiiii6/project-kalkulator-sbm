@@ -210,8 +210,8 @@ Jangan membuat asumsi tarif jika data ada.
 Format output:
 
 ### Tabel Perhitungan
-| Komponen | Tarif | Volume | Total |
-|----------|-------|--------|-------|
+| Komponen | Tarif | Jumlah | Total | Hari |
+|----------|-------|--------|-------|-------|
 
 ### Ringkasan Anggaran
 | Item | Nilai |
