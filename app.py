@@ -97,12 +97,12 @@ section.main > div {
 
 /* assistant kiri */
 [data-testid="stChatMessage"]:has([data-testid="stMarkdownContainer"]) {
-    margin-left: auto;
+    margin-left: 1px;
 }
 
 /* user kanan */
 [data-testid="stChatMessage"]:has(.stChatMessageAvatarUser) {
-    margin-right: auto;
+    margin-right: 2px;
 }
 
 </style>
