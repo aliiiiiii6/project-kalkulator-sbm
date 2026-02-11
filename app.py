@@ -102,7 +102,7 @@ section.main > div {
 
 /* user kanan */
 [data-testid="stChatMessage"]:has(.stChatMessageAvatarUser) {
-    margin-left: 5px;
+    margin-left: 100px;
 }
 
 </style>
