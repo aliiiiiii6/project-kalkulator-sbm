@@ -92,7 +92,7 @@ section.main > div {
 }
 /* ===== CHAT WIDTH FIX ===== */
 [data-testid="stChatMessage"] {
-    max-width: 30%;
+    max-width: 100%;
 }
 
 /* assistant kiri */
