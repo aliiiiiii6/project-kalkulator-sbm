@@ -90,19 +90,27 @@ section.main > div {
     text-align:center;
     margin-bottom:25px;
 }
-/* ===== CHAT WIDTH FIX ===== */
-[data-testid="stChatMessage"] {
-    max-width: 100%;
+/* ===== GPT STYLE CHAT ALIGNMENT ===== */
+
+/* bikin container chat flex */
+[data-testid="stChatMessage"]{
+    width:100%;
+    display:flex;
 }
 
-/* assistant */
+/* ukuran bubble */
 [data-testid="stChatMessageContent"]{
-    max-width:70%;
+    max-width:65%;
 }
 
-/* geser kanan bubble user */
-[data-testid="stChatMessage"]:nth-child(even){
-    margin-left:auto;
+/* assistant kiri */
+[data-testid="stChatMessage"][data-testid*="assistant"]{
+    justify-content:flex-start;
+}
+
+/* user kanan */
+[data-testid="stChatMessage"][data-testid*="user"]{
+    justify-content:flex-end;
 }
 
 </style>
