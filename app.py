@@ -103,6 +103,11 @@ section.main > div {
     max-width:65%;
 }
 
+[data-testid="stChatMessageContent"]{
+    padding:14px 18px;
+    border-radius:18px;
+}
+
 /* assistant kiri */
 [data-testid="stChatMessage"][data-testid*="assistant"]{
     justify-content:flex-start;
