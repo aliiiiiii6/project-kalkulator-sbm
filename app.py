@@ -49,7 +49,85 @@ def get_excel_context(query):
 # ==============================
 # 3. UI
 # ==============================
-st.title("🤖 PUSBIN Smart Assistant (Arin)")
+# ==============================
+# GPT-LIKE CLEAN UI STYLE
+# ==============================
+st.markdown("""
+<style>
+
+/* Background soft gradient */
+[data-testid="stAppViewContainer"]{
+    background: radial-gradient(circle at top,#eef2ff 0%,#f8fafc 40%,#ffffff 70%);
+}
+
+/* Center layout feel */
+.block-container{
+    max-width: 900px;
+    padding-top: 2rem;
+}
+
+/* Hero container */
+.gpt-hero{
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(12px);
+    border-radius:20px;
+    padding:30px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.06);
+    text-align:center;
+    margin-bottom:25px;
+}
+
+/* Title style */
+.gpt-title{
+    font-size:36px;
+    font-weight:700;
+    letter-spacing:-0.5px;
+}
+
+/* Subtitle */
+.gpt-sub{
+    color:#6b7280;
+    margin-top:8px;
+    font-size:15px;
+}
+
+/* Feature mini badge */
+.badge-wrap{
+    margin-top:18px;
+}
+
+.badge{
+    display:inline-block;
+    padding:6px 12px;
+    margin:4px;
+    border-radius:999px;
+    background:#f1f5f9;
+    font-size:13px;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# ==============================
+# HERO SECTION (GPT STYLE)
+# ==============================
+st.markdown("""
+<div class="gpt-hero">
+    <div class="gpt-title">🤖 PUSBIN Smart Assistant (Arin)</div>
+    <div class="gpt-sub">
+        Asisten analisis anggaran berbasis AI yang membantu membaca data,
+        menghitung otomatis, dan menyusun tabel perhitungan dengan cepat.
+    </div>
+
+    <div class="badge-wrap">
+        <span class="badge">📊 Analisis Anggaran</span>
+        <span class="badge">🧮 Perhitungan Otomatis</span>
+        <span class="badge">⚡ AI Assistant</span>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+st.caption("💡 Coba tanya: Hitung biaya perjalanan dinas luar kota 3 orang")
 
 user_input = st.text_input("Masukan Segala Informasi Yang Kamu Butuhkan")
 
